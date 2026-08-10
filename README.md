@@ -30,9 +30,9 @@ total duration: 536ms
 - 根据程序退出码，把每次探测标记为成功或失败。
 - 修改服务配置时逐步替换旧 Pod。
 
-这些功能对于当前项目有些大材小用，但它们让我实际理解了 Deployment、Service、ConfigMap、CronJob、健康检查和资源限制分别在做什么。
+这些功能对于当前项目有些大材小用，但有助于我实际理解 Deployment、Service、ConfigMap、CronJob、健康检查和资源限制分别在做什么。
 
-更详细的过程、踩坑和目前的理解记录在 [学习历程](LEARNING.md)。
+详细的过程和目前的理解记录在 [学习历程](LEARNING.md)。
 
 ## 本地运行
 
