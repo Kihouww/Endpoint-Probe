@@ -2,18 +2,18 @@
 
 ## 1. Go 程序
 
-最开始的 `endpoint-probe` 只做几件事：
+最开始的 `endpoint-probe` 功能：
 
-1. 从 JSON 文件读取名称、URL 和超时时间。
-2. 为每个目标并发发送 HTTP `GET` 请求。
-3. 输出状态码、单次耗时和总耗时。
+1. 从 JSON 文件读取目标名称、URL 和超时时间。
+2. 并发发送 HTTP `GET` 请求。
+3. 输出状态码、单次耗时、总耗时。
 4. 请求失败或返回非 `2xx` 时，以退出码 `1` 结束。
 
 主要练习了结构体、JSON、错误处理、HTTP 客户端、goroutine、channel 和单元测试。
 
 ## 2. Docker
 
-我先运行了现成的 Nginx 镜像，然后为两个 Go 程序分别写了 Dockerfile。
+先运行了现成的 Nginx 镜像，然后为两个 Go 程序分别写了 Dockerfile。
 
 明白了：
 
