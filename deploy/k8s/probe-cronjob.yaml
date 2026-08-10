@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: endpoint-probe
+  namespace: endpoint-lab
+spec:
+  schedule: "*/1 * * * *"
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 3
+  failedJobsHistoryLimit: 3
+  jobTemplate:
+    spec:
+      backoffLimit: 1
+      activeDeadlineSeconds: 30
+      template:
+        metadata:
+          labels:
+            app: endpoint-probe
+        spec:
+          restartPolicy: Never
+          containers:
+            - name: endpoint-probe
+              image: endpoint-probe:local
+              imagePullPolicy: IfNotPresent
+              resources:
+                requests:
+                  cpu: 10m
+                  memory: 16Mi
+                limits:
+                  cpu: 100m
+                  memory: 64Mi
+              volumeMounts:
+                - name: probe-config
+                  mountPath: /app/configs
+                  readOnly: true
+          volumes:
+            - name: probe-config
+              configMap:
+                name: endpoint-probe-config

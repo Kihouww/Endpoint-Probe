@@ -69,22 +69,33 @@ func formatTarget(target Target) string {
 }
 
 func main() {
-	targets, err := loadTargets("configs/targets.json")
+	os.Exit(run("configs/targets.json"))
+}
+
+func run(configPath string) int {
+	targets, err := loadTargets(configPath)
 	if err != nil {
-		fmt.Printf("load targets failed: %v\n", err)
-		return
+		fmt.Fprintf(os.Stderr, "load targets failed: %v\n", err)
+		return 1
 	}
 
 	results := make(chan ProbeResult)
 	totalStart := time.Now()
+
 	for _, target := range targets {
 		go probeAndSend(target, results)
 	}
+
+	failed := false
+
 	for completed := 0; completed < len(targets); completed++ {
 		result := <-results
 
 		if result.Err != nil {
-			fmt.Printf("%s: error after %v: %v\n",
+			failed = true
+			fmt.Fprintf(
+				os.Stderr,
+				"%s: error after %v: %v\n",
 				result.Name,
 				result.Duration.Round(time.Millisecond),
 				result.Err,
@@ -92,15 +103,27 @@ func main() {
 			continue
 		}
 
-		fmt.Printf("%s: status = %d duration = %v\n",
+		fmt.Printf(
+			"%s: status = %d duration = %v\n",
 			result.Name,
 			result.StatusCode,
 			result.Duration.Round(time.Millisecond),
 		)
+
+		if result.StatusCode < http.StatusOK ||
+			result.StatusCode >= http.StatusMultipleChoices {
+			failed = true
+		}
 	}
 
 	fmt.Printf(
 		"total duration: %v\n",
 		time.Since(totalStart).Round(time.Millisecond),
 	)
+
+	if failed {
+		return 1
+	}
+
+	return 0
 }

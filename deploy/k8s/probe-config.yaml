@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: endpoint-probe-config
+  namespace: endpoint-lab
+data:
+  targets.json: |
+    [
+      {
+        "name": "PredictorHealth",
+        "url": "http://predictor/healthz",
+        "timeout": 2
+      },
+      {
+        "name": "PredictorVersion",
+        "url": "http://predictor/version",
+        "timeout": 2
+      }
+    ]
